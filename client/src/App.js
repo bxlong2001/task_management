@@ -9,6 +9,7 @@ function App() {
         <Route path='/' element={<Landing/>}/>
         <Route path='/login' element={<Auth authRoute='login'/>}/>
         <Route path='/register' element={<Auth authRoute='register'/>}/>
+        <Route path='/home' element={<Auth authRoute='register'/>}/>
       </Routes>
     </Router>
   );
