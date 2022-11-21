@@ -1,13 +1,14 @@
-import { createContext, useReducer } from "react";
+import React, { createContext, Reducer, useReducer } from "react";
 import axios from 'axios'
-import authReducer from '../reducers/authReducer'
+import authReducer, { AuthAction, AuthState } from '../reducers/authReducer'
 import setAuthToken from '../utils/setAuthToken'
 import { apiUrl, LOCAL_STORAGE_TOKEN_NAME } from "./constaints";
+import { AuthContextData } from "../../interface";
 
-const AuthContext = createContext()
+const AuthContext = createContext<AuthContextData | undefined>(undefined)
 
-const AuthContextProvider = ({children}) => {
-    const [authState, authDispatch] = useReducer(authReducer, {
+const AuthContextProvider = ({children}:any) => {
+    const [authState, authDispatch] = useReducer<Reducer<AuthState, AuthAction>>(authReducer, {
         authLoading: true,
         isAuthenticated: false,
         user: null,
@@ -38,7 +39,7 @@ const AuthContextProvider = ({children}) => {
 	}
 
     //Login
-    const loginUser = async loginForm => {
+    const loginUser = async (loginForm:FormData)=> {
         try {
             const response = await axios.post(apiUrl + 'auth/login', loginForm)
             if(response.data.success)
@@ -47,7 +48,7 @@ const AuthContextProvider = ({children}) => {
             await loadUser()
 
             return response.data
-        } catch (error) {
+        } catch (error: any) {
             if (error.response.data)
                 return error.response.data
             else
@@ -55,7 +56,18 @@ const AuthContextProvider = ({children}) => {
         }
     }
 
-    const authContextData = { loginUser, authState, authDispatch}
+    //Login
+    const loginUserWithGG = async (access_token: string)=> {
+        try {
+            const response = await axios.post(apiUrl + 'users/auth/google', {access_token})
+            console.log(response);
+            
+            return response.data
+        } catch (error: any) {
+        }
+    }
+
+    const authContextData = { loginUser, loginUserWithGG, authState, authDispatch}
 
 
     return (
@@ -63,4 +75,7 @@ const AuthContextProvider = ({children}) => {
             {children}
         </AuthContext.Provider>
     )
+
 }
+export {AuthContext}
+export default AuthContextProvider
