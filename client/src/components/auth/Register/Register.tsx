@@ -16,7 +16,7 @@ const Register = () => {
 
     }
 
-    const handleRegister = (e) => {
+    const handleRegister = (e: any) => {
         setRegisterForm({
             ...registerForm,
             [e.target.name]: e.target.value

@@ -1,4 +1,18 @@
-const authReducer = (state, action) => {
+export interface AuthState {
+    authLoading: boolean,
+    isAuthenticated: boolean,
+    user: any,
+}
+
+export interface AuthAction {
+    type: string,
+    payload: {
+        isAuthenticated: boolean,
+        user: any
+    }
+}
+
+const authReducer = (state: AuthState, action: AuthAction) => {
     const {type, payload: {isAuthenticated, user}} = action
 
     switch (type) {

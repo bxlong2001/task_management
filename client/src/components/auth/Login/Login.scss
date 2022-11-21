@@ -1,0 +1,12 @@
+.google_btn {
+    padding: 10px;
+    border-radius: 5px;
+    img {
+        width: 30px;
+        padding-right: 5px;
+    }
+
+    &:hover {
+        color: rgb(105, 104, 104);
+    }
+}
