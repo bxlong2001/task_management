@@ -8,7 +8,7 @@ const {
 } = require("../configs");
 
 const LocalStrategy = require("passport-local").Strategy;
-const GooglePlusTokenStrategy = require("passport-google-plus-token");
+const GoogleTokenStrategy = require("passport-google-token").Strategy;
 const User = require("../models/User");
 
 //Passport JWT
@@ -58,7 +58,7 @@ passport.use(
 //Passport Google
 
 passport.use(
-  new GooglePlusTokenStrategy(
+  new GoogleTokenStrategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,

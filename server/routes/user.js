@@ -16,7 +16,7 @@ const { session } = require("passport");
 
 route.post(
   "/auth/google",
-  passport.authenticate("google-plus-token", { session: false }),
+  passport.authenticate("google-token", { session: false }),
   UserController.authGoogle
 );
 
