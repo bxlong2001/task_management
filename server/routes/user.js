@@ -19,7 +19,12 @@ route.post(
   passport.authenticate("google-token", { session: false }),
   UserController.authGoogle
 );
-
+route
+  .route("/auth/facebook")
+  .post(
+    passport.authenticate("facebook-token", { session: false }),
+    UserController.authFacebook
+  );
 route
   .route("/")
   .get(UserController.index)

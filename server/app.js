@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const logger = require("morgan");
 const mongoClient = require("mongoose");
+const cors = require("cors");
 
 // setup connect mongodb by mongoose
 mongoClient
@@ -26,7 +27,7 @@ const userRoute = require("./routes/user");
 // Middlewares
 app.use(logger("dev"));
 app.use(bodyParser.json());
-
+app.use(cors());
 // Routes
 app.use("/decks", deckRoute);
 app.use("/users", userRoute);
