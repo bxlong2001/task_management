@@ -33,6 +33,13 @@ const validateParam = (schema, name) => {
 };
 
 const schemas = {
+  newProjectSchema: Joi.object().keys({
+    Name: Joi.string().required(),
+    Notes: Joi.string(),
+    Status: Joi.string(),
+    Owner: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+    Collaborator: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  }),
   authSignInSchema: Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),

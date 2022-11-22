@@ -21,17 +21,17 @@ mongoClient
 
 const app = express();
 
-const deckRoute = require("./routes/deck");
+//const deckRoute = require("./routes/deck");
 const userRoute = require("./routes/user");
-
+const projectRoute = require("./routes/project");
 // Middlewares
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(cors());
 // Routes
-app.use("/decks", deckRoute);
-app.use("/users", userRoute);
 
+app.use("/users", userRoute);
+app.use("/projects", projectRoute);
 // Routes
 app.get("/", (req, res, next) => {
   return res.status(200).json({
