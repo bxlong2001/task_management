@@ -14,6 +14,8 @@ const passport = require("passport");
 const passportConfig = require("../middlewares/passport");
 const { session } = require("passport");
 
+route.route("/refreshToken").post(UserController.refreshToken);
+
 route.post(
   "/auth/google",
   passport.authenticate("google-token", { session: false }),
