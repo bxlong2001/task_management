@@ -1,14 +1,17 @@
 import { useContext, useState, useEffect } from "react"
 import { Button, Form } from "react-bootstrap"
-import { Link } from "react-router-dom"
-import { AuthContext } from "../../../contexts/AuthContext"
+import { Link, useNavigate } from "react-router-dom"
 import { AuthContextData } from "../../../../interface"
-import { apiUrl, GOOGLE_CLIENT_ID } from "../../../contexts/constaints"
+import { GOOGLE_CLIENT_ID } from "../../../contexts/constaints"
 import { GoogleLogin, GoogleLogout } from "react-google-login"
 import { gapi } from "gapi-script"
+import { loginUserWithGG } from "../../../redux/apiRequest"
+import { useDispatch } from "react-redux"
+
 
 const Login = () => {
-    const {loginUser, loginUserWithGG} = useContext(AuthContext) as AuthContextData
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     
     useEffect(() => {
         function start() {
@@ -32,17 +35,10 @@ const Login = () => {
 
     }
 
-    // const loginWithGG = async (e: any) => {
-    //     e.preventDefault()
-
-    //     window.open(`${apiUrl}/auth/google`, "_self")
-    // }
-
     const onSuccess = async (res: any) => {
-        
         try {
             // console.log(res);
-            const loginData = await loginUserWithGG(res.accessToken)
+            const loginData = await loginUserWithGG(res.accessToken, dispatch, navigate)
             if(!loginData.success) {
                 console.log('Login failure!');
                 return
@@ -60,7 +56,7 @@ const Login = () => {
     }
 
     const onLogoutSuccess = () => {
-        console.log('SUCESS LOG OUT');
+        console.log('SUCCESS LOG OUT');
       }
 
     const handleLogin = (e: any) => {
