@@ -6,11 +6,12 @@ const express = require("express");
 const logger = require("morgan");
 const mongoClient = require("mongoose");
 const cors = require("cors");
+const { Database } = require("./configs");
 
 // setup connect mongodb by mongoose
 mongoClient
   .connect(
-    "mongodb+srv://todoApp:90AitZkNKIRK1DEq@atlascluster.vnmjcyr.mongodb.net/test",
+    `mongodb+srv://todoApp:${Database}@atlascluster.vnmjcyr.mongodb.net/test`,
     {
       useCreateIndex: true,
       useNewUrlParser: true,
@@ -27,6 +28,7 @@ const app = express();
 //const deckRoute = require("./routes/deck");
 const userRoute = require("./routes/user");
 const projectRoute = require("./routes/project");
+
 // Middlewares
 app.use(logger("dev"));
 app.use(bodyParser.json());
