@@ -13,6 +13,7 @@ const {
 const passport = require("passport");
 const passportConfig = require("../middlewares/passport");
 const { session } = require("passport");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 route.route("/refreshToken").post(UserController.refreshToken);
 
@@ -48,6 +49,8 @@ route
   .route("/secret")
   .get(passport.authenticate("jwt", { session: false }), UserController.secret);
 
+route.route("/getAllUser").get(authMiddleware, UserController.getAllUser);
+route.route("/userCurrent").get(UserController.getUserCurrent);
 route
   .route("/:userID")
   .get(validateParam(schemas.idSchema, "userID"), UserController.getUser)
@@ -62,13 +65,5 @@ route
     UserController.updateUser
   );
 
-route
-  .route("/:userID/decks")
-  .get(validateParam(schemas.idSchema, "userID"), UserController.getUserDecks)
-  .post(
-    validateParam(schemas.idSchema, "userID"),
-    validateBody(schemas.deckSchema),
-    UserController.newUserDeck
-  );
 
 module.exports = route;

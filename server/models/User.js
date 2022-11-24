@@ -35,12 +35,10 @@ const UserSchema = new Schema(
       default: "local",
     },
 
-    decks: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Deck",
-      },
-    ],
+    avatar: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

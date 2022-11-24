@@ -6,12 +6,12 @@ const {
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
   FACEBOOK_CLIENT_ID,
-  FACEBOOK_CLIENT_SECRET
+  FACEBOOK_CLIENT_SECRET,
 } = require("../configs");
 
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleTokenStrategy = require("passport-google-token").Strategy;
-const FacebookTokenStrategy = require('passport-facebook-token');
+const FacebookTokenStrategy = require("passport-facebook-token");
 const User = require("../models/User");
 
 //Passport JWT
@@ -68,6 +68,7 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+       
         //check whether this current user exists in database
         const user = await User.findOne({
           authGoogleID: profile.id,
@@ -81,6 +82,7 @@ passport.use(
           authType: "google",
           email: profile.emails[0].value,
           authGoogleID: profile.id,
+          avatar: profile.picture,
         });
 
         await newUser.save();
@@ -107,22 +109,22 @@ passport.use(
           authType: "google",
         });
 
-        if (user) return done(null, user)
+        if (user) return done(null, user);
 
         // If new account
         const newUser = new User({
-          authType: 'facebook',
+          authType: "facebook",
           authFacebookID: profile.id,
           email: profile.emails[0].value,
           firstName: profile.name.givenName,
-          lastName: profile.name.familyName
-        })
+          lastName: profile.name.familyName,
+        });
 
-        await newUser.save()
+        await newUser.save();
 
-        done(null, newUser)
+        done(null, newUser);
       } catch (error) {
-        console.log('error ', error)
+        console.log("error ", error);
         done(error, false);
       }
     }
