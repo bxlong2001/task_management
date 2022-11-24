@@ -68,7 +68,8 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-       
+        console.log(profile);
+        console.log(profile._json);
         //check whether this current user exists in database
         const user = await User.findOne({
           authGoogleID: profile.id,
@@ -82,7 +83,9 @@ passport.use(
           authType: "google",
           email: profile.emails[0].value,
           authGoogleID: profile.id,
-          avatar: profile.picture,
+          avatar: profile._json.picture,
+          firstName: profile._json.family_name,
+          lastName: profile._json.given_name,
         });
 
         await newUser.save();
