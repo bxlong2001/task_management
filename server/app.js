@@ -9,11 +9,14 @@ const cors = require("cors");
 
 // setup connect mongodb by mongoose
 mongoClient
-  .connect("mongodb://0.0.0.0/nodejsapistarter", {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://todoApp:90AitZkNKIRK1DEq@atlascluster.vnmjcyr.mongodb.net/test",
+    {
+      useCreateIndex: true,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => console.log("✅ Connected database from mongodb."))
   .catch((error) =>
     console.error(`❌ Connect database is failed with error which is ${error}`)
