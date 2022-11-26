@@ -12,18 +12,13 @@
         font-weight: 600;
         padding: 9px 20px;    
     }
-
-    .nav-user {
-        display: flex;
-        align-items: center;
     
-        .nav-user-avt {
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #eaeaea;
-        }
+    .nav-user-avt {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #eaeaea;
     }
 }
 

@@ -1,20 +1,26 @@
 import { useState } from "react"
 import { Button, Form } from "react-bootstrap"
-import { Link } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { Link, useNavigate } from "react-router-dom"
+import { Alert } from "../../../interface"
+import { registerUser } from "../../../redux/apiRequest"
+import AlertMessage from "../../layout/Alert/AlertMessage"
+
+
 
 const Register = () => {
+    const [alert, setAlert] = useState<Alert | null>(null)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const [registerForm, setRegisterForm] = useState({
-        username: '',
-        fullname: '',
+        email: '',
+        firstName: '',
+        lastName: '',
         password: '',
         confirmPassword: ''
     })
-    const {username, fullname, password, confirmPassword} = registerForm
-
-
-    const Register = async () => {
-
-    }
+    const {email, firstName, lastName, password, confirmPassword} = registerForm
 
     const handleRegister = (e: any) => {
         setRegisterForm({
@@ -23,17 +29,40 @@ const Register = () => {
         })
     }
 
+    const register = async (e: any) => {
+        e.preventDefault()
+
+        if(password !== confirmPassword){
+            setAlert({type: 'danger', message: 'Mật khẩu không khớp'})
+            setTimeout(() => setAlert(null), 3000)
+            return
+        }
+
+        try {
+            const { confirmPassword, ...formData } = registerForm
+            const registerData = await registerUser(formData, dispatch, navigate)
+            if(!registerData.success) {
+                setAlert({type: 'danger',  message: registerData.message})
+                setTimeout(() => setAlert(null), 3000)
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+
+    }
+
+
     return (
         <>
-            <Form onSubmit={Register}>
+            <Form onSubmit={register}>
                 <Form.Group>
                     <Form.Control
                         type='text'
-                        placeholder='Nhập họ tên'
-                        name='fullname'
-                        value={fullname}
-                        maxLength={30}
-                        minLength={6}
+                        placeholder='Nhập Họ'
+                        name='firstName'
+                        value={firstName}
+                        maxLength={15}
                         required
                         onChange={handleRegister}
                     />
@@ -41,12 +70,22 @@ const Register = () => {
                 <Form.Group>
                     <Form.Control
                         type='text'
-                        placeholder='Nhập tài khoản'
-                        name='username'
-                        maxLength={20}
-                        minLength={6}
+                        placeholder='Nhập Tên'
+                        name='lastName'
+                        value={lastName}
+                        maxLength={15}
                         required
-                        value={username}
+                        onChange={handleRegister}
+                    />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Control
+                        type='email'
+                        placeholder='Nhập email'
+                        name='email'
+                        maxLength={30}
+                        required
+                        value={email}
                         onChange={handleRegister}
                     />
                 </Form.Group>
@@ -73,7 +112,7 @@ const Register = () => {
                         value={confirmPassword}
                         onChange={handleRegister}
                     />
-                {/* <AlertMessage info={alert}/> */}
+                    <AlertMessage info={alert}/>
                 </Form.Group>
                 <Button variant='success' type='submit' size='lg'>Đăng ký</Button>
             </Form>
