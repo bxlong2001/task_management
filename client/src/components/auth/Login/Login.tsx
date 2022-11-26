@@ -1,17 +1,26 @@
-import { useContext, useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Button, Form } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
-import { AuthContextData } from "../../../../interface"
 import { GOOGLE_CLIENT_ID } from "../../../contexts/constaints"
-import { GoogleLogin, GoogleLogout } from "react-google-login"
+import { GoogleLogin } from "react-google-login"
 import { gapi } from "gapi-script"
-import { loginUserWithGG } from "../../../redux/apiRequest"
+import { loginUserWithGG, loginUser } from "../../../redux/apiRequest"
 import { useDispatch } from "react-redux"
+import AlertMessage from "../../layout/Alert/AlertMessage"
+import { Alert } from "../../../interface"
 
 
 const Login = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const [alert, setAlert] = useState<Alert | null>(null)
+
+    const [loginForm, setLoginForm] = useState({
+        email: '',
+        password: ''
+    })
+    
+    const {email, password} = loginForm
     
     useEffect(() => {
         function start() {
@@ -23,41 +32,40 @@ const Login = () => {
     
         gapi.load('client:auth2', start);
     }, []);
-    
 
-    const [loginForm, setLoginForm] = useState({
-        username: '',
-        password: ''
-    })
-    const {username, password} = loginForm
+    const login = async (e: any) => {
+        e.preventDefault()
 
-    const login = async () => {
+        try {
+            const loginData = await loginUser(loginForm, dispatch, navigate)
+            if(!loginData.success) {
+                setAlert({type: 'danger',  message: loginData.message})
+                setTimeout(() => setAlert(null), 3000)
 
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
     const onSuccess = async (res: any) => {
         try {
-            // console.log(res);
             const loginData = await loginUserWithGG(res.accessToken, dispatch, navigate)
             if(!loginData.success) {
-                console.log('Login failure!');
-                return
+                setAlert({type: 'danger', message: loginData.message})
+                setTimeout(() => setAlert({type: '', message: ''}), 3000)
             }
-            console.log('Success!');
             
 
         } catch (error) {
-            
+            console.log(error);     
         }
     }
 
     const onFailure = (res: any) => {
         console.log("LOGIN FAILURE! res: ", res);
     }
-
-    const onLogoutSuccess = () => {
-        console.log('SUCCESS LOG OUT');
-      }
 
     const handleLogin = (e: any) => {
         setLoginForm({
@@ -68,15 +76,15 @@ const Login = () => {
 
 
     return (
-<>
+        <>
             <Form onSubmit={login}>
                 <Form.Group>
                     <Form.Control
                         type='text'
                         placeholder='Nhập tài khoản'
-                        name='username'
+                        name='email'
                         required
-                        value={username}
+                        value={email}
                         onChange={handleLogin}
                     />
                 </Form.Group>
@@ -91,7 +99,7 @@ const Login = () => {
                     />
                 </Form.Group>
                 
-                {/* <AlertMessage info={alert}/> */}
+                <AlertMessage info={alert}/>
                 <Button variant='success' type='submit' size='lg' >Đăng nhập</Button>
                 <br />
                 <span>hoặc</span>
@@ -102,14 +110,6 @@ const Login = () => {
                     onSuccess={onSuccess}
                     onFailure={onFailure}
                 />
-                <GoogleLogout
-                    clientId={GOOGLE_CLIENT_ID}
-                    onLogoutSuccess={onLogoutSuccess}
-                />
-                {/*<button className="google_btn" onClick={loginWithGG}>
-                    <img src="https://seeklogo.com/images/G/google-logo-28FA7991AF-seeklogo.com.png" alt="google icon"></img>
-                    <span>Đăng nhập với Google</span>
-                </button> */}
             </Form>
             <p>{"Bạn chưa có tài khoản? "} 
                 <Link to='/register'>
