@@ -18,10 +18,12 @@ const ProjectSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    Collaborator: {
-      type: [Schema.Types.ObjectId],
-      ref: "User",
-    },
+    Collaborator: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     StartDate: {
       type: Date,
       default: new Date(),
@@ -30,10 +32,12 @@ const ProjectSchema = new Schema(
       type: Date,
       default: null,
     },
-    TaskList: {
-      type: [Schema.Types.ObjectId],
-      ref: "Task",
-    },
+    TaskList: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Task",
+      },
+    ],
   },
   {
     timestamps: true,

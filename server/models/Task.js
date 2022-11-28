@@ -14,10 +14,12 @@ const TaskSchema = new Schema(
       enum: ["todo", "in_progress", "done"],
       default: "todo",
     },
-    Collaborator: {
-      type: [Schema.Types.ObjectId],
-      ref: "User",
-    },
+    Collaborator: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     StartDate: {
       type: Date,
       default: new Date(),
