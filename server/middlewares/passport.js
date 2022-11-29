@@ -44,12 +44,30 @@ passport.use(
     async (email, password, done) => {
       try {
         const user = await User.findOne({ email: email });
-        if (!user) return done(null, false);
-        const isCorrectPassword = await user.isValidPassword(password);
-        if (!isCorrectPassword) return done(null, false);
-        console.log(GOOGLE_CLIENT_ID);
-        console.log(JWT_SECRET);
-        done(null, user);
+        if (!user) {
+          return done(
+            {
+              message: "Tài khoản hoặc mật khẩu không chính xác",
+            },
+            false,
+            {
+              message: "Tài khoản hoặc mật khẩu không chính xác",
+            }
+          );
+        } else {
+          const isCorrectPassword = await user.isValidPassword(password);
+          if (!isCorrectPassword)
+            return done(
+              {
+                message: "Tài khoản hoặc mật khẩu không chính xác",
+              },
+              false,
+              {
+                message: "Tài khoản hoặc mật khẩu không chính xác",
+              }
+            );
+          done(null, user, { message: "đăng nhập thành công" });
+        }
       } catch (error) {
         console.log(error);
         done(error, false);
@@ -68,8 +86,6 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log(profile);
-        console.log(profile._json);
         //check whether this current user exists in database
         const user = await User.findOne({
           authGoogleID: profile.id,

@@ -42,7 +42,7 @@ route
   .post(
     validateBody(schemas.authSignInSchema),
     passport.authenticate("local", { session: false }),
-    UserController.signIn
+    UserController.signIn 
   );
 
 route
@@ -64,6 +64,5 @@ route
     validateBody(schemas.userOptionalSchema),
     UserController.updateUser
   );
-
 
 module.exports = route;

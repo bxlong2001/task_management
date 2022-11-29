@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const TaskSchema = new Schema(
   {
+    ProjectId: {
+      type: String,
+      required: true,
+    },
     Name: {
       type: String,
     },

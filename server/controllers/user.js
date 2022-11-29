@@ -70,7 +70,7 @@ const refreshToken = async (req, res, next) => {
 
 const authFacebook = async (req, res, next) => {
   const token = encodedToken(req.user._id);
-  return res.status(200).json({ success: true });
+  return res.status(200).json({ success: true, message: "loi" });
 };
 
 const authGoogle = async (req, res, next) => {
@@ -78,18 +78,32 @@ const authGoogle = async (req, res, next) => {
     const token = encodedToken(req.user._id);
     const refreshToken = createRefreshToken(req.user._id);
     const User = req.user;
-    return res.status(200).json({ success: true, token, User, refreshToken });
+    return res.status(200).json({
+      success: true,
+      token,
+      User,
+      refreshToken,
+      message: "Xác thực authGoogle thành công",
+    });
   } catch (error) {
     console.log(error);
+    return res
+      .status(401)
+      .json({ success: false, message: "Xác thực không thành công" });
   }
 };
 
 const getUser = async (req, res, next) => {
-  const { userID } = req.value.params;
+  try {
+    const { userID } = req.value.params;
 
-  const user = await User.findById(userID);
+    const user = await User.findById(userID);
 
-  return res.status(200).json({ user });
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.log(error);
+    return res.status(401).json({ success: false, message: error });
+  }
 };
 
 const getUserCurrent = async (req, res, next) => {
@@ -144,11 +158,14 @@ const secret = async (req, res, next) => {
 
 const signIn = async (req, res, next) => {
   try {
+    console.log(req.authInfo.message);
     const token = encodedToken(req.user._id);
-
     return res.status(200).json({ success: true, token });
   } catch (error) {
     console.log(error);
+    return res
+      .status(401)
+      .json({ success: false, message: "Tài khoản hoặc mật khẩu không đúng" });
   }
 };
 

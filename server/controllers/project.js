@@ -6,13 +6,15 @@ const newProject = async (req, res, next) => {
     const checkNameProject = await Project.find({ Name: newProject.Name });
 
     if (checkNameProject.length > 0) {
-      return res.status(400).json({ message: "tên đã tồn tại" });
+      return res
+        .status(400)
+        .json({ success: false, message: "tên đã tồn tại" });
     } else {
       await newProject.save();
-      return res.status(201).json({ project: newProject });
+      return res.status(201).json({ success: true, project: newProject });
     }
   } catch (error) {
-    console.log(error);
+    return res.status(400).json({ message: error.message });
   }
 };
 
