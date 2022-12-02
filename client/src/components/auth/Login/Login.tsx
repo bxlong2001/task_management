@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Button, Form } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { GOOGLE_CLIENT_ID } from "../../../contexts/constaints"
@@ -7,15 +7,14 @@ import { gapi } from "gapi-script"
 import { loginUserWithGG, loginUser } from "../../../redux/apiRequest"
 import { useDispatch } from "react-redux"
 import AlertMessage from "../../layout/Alert/AlertMessage"
-import { Alert } from "../../../interface"
-
+import { Alert, LoginForm } from "../../../interface"
 
 const Login = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [alert, setAlert] = useState<Alert | null>(null)
 
-    const [loginForm, setLoginForm] = useState({
+    const [loginForm, setLoginForm] = useState<LoginForm>({
         email: '',
         password: ''
     })
@@ -33,15 +32,14 @@ const Login = () => {
         gapi.load('client:auth2', start);
     }, []);
 
-    const login = async (e: any) => {
+    const login = async (e: React.FormEvent) => {
         e.preventDefault()
 
         try {
             const loginData = await loginUser(loginForm, dispatch, navigate)
             if(!loginData.success) {
-                setAlert({type: 'danger',  message: loginData.message})
+                setAlert({type: 'danger',  message: loginData.error ? loginData.error.message : loginData.message})
                 setTimeout(() => setAlert(null), 3000)
-
             }
         } catch (error) {
             console.log(error);
@@ -52,8 +50,8 @@ const Login = () => {
     const onSuccess = async (res: any) => {
         try {
             const loginData = await loginUserWithGG(res.accessToken, dispatch, navigate)
-            if(!loginData.success) {
-                setAlert({type: 'danger', message: loginData.message})
+            if(loginData.error) {
+                setAlert({type: 'danger', message: loginData.error.message})
                 setTimeout(() => setAlert({type: '', message: ''}), 3000)
             }
             
@@ -64,10 +62,11 @@ const Login = () => {
     }
 
     const onFailure = (res: any) => {
-        console.log("LOGIN FAILURE! res: ", res);
+        setAlert({type: 'danger', message: 'LOGIN FAILURE! res: ' + res})
+        setTimeout(() => setAlert({type: '', message: ''}), 3000)
     }
 
-    const handleLogin = (e: any) => {
+    const handleLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLoginForm({
             ...loginForm,
             [e.target.name]: e.target.value

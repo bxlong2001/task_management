@@ -1,10 +1,11 @@
+import React from "react"
 import { Spinner } from "react-bootstrap"
 import { useSelector } from "react-redux"
 import { Navigate } from "react-router-dom"
 import Login from "../Login/Login"
 import Register from "../Register/Register"
 
-const Auth = ({authRoute}:any) => {
+const Auth: React.FC<{authRoute: string}> = (props) => {
     const { isFetching, isAuthenticated } = useSelector((state: any) => state.user.loadUser)
     
     let body
@@ -22,8 +23,8 @@ const Auth = ({authRoute}:any) => {
     else
         body = (
             <>
-                {authRoute === 'login' && <Login />}
-                {authRoute === 'register' && <Register />}
+                {props.authRoute === 'login' && <Login />}
+                {props.authRoute === 'register' && <Register />}
             </>
         )
 

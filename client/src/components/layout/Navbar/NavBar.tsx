@@ -20,7 +20,7 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            
+            <Nav.Link to='/me/my-work' as={Link}>Trang cá nhân</Nav.Link>
           </Nav>
           <Nav>
             <Link to={'/me/info'}>
@@ -28,9 +28,9 @@ const NavBar = () => {
             </Link>
 
             <NavDropdown title={currentUser.lastName + ' ' + currentUser.firstName} id="collasible-nav-dropdown" className="nav-user">
-              <NavDropdown.Item href="#action/3.1">Hồ sơ cá nhân</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Tạo công việc mới</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">Công việc của bạn</NavDropdown.Item>
+              <NavDropdown.Item to="me/info" as={Link}>Hồ sơ cá nhân</NavDropdown.Item>
+              <NavDropdown.Item to="me/new-work" as={Link}>Tạo công việc mới</NavDropdown.Item>
+              <NavDropdown.Item to="me/my-work" as={Link}>Công việc của bạn</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={logOut}>
                 Đăng xuất
