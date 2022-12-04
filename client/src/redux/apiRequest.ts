@@ -24,6 +24,8 @@ export const loadUser = async (dispatch: any) => {
             setAuthToken('')
         }
     } catch (error: any) {
+        localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
+        setAuthToken('')
         if (error.response.data)
                 return error.response.data
             else
@@ -35,6 +37,7 @@ export const loadUser = async (dispatch: any) => {
 export const loginUserWithGG = async (access_token: string, dispatch: any, navigate: any)=> {
     dispatch(loginStart())
     try {
+        debugger
         const response = await axios.post(apiUrl + 'users/auth/google', {access_token})
         if(response.data.success) {
             localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.token)
@@ -46,7 +49,9 @@ export const loginUserWithGG = async (access_token: string, dispatch: any, navig
             localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
             dispatch(loginFailed())
         }
-
+        
+        console.log(response.data);
+        
         return response.data
     } catch (error: any) {
         if (error.response.data)
@@ -71,6 +76,9 @@ export const loginUser = async (loginForm: LoginForm, dispatch: any, navigate: a
             localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
             dispatch(loginFailed())
         }
+
+        console.log(response.data);
+
         
         return response.data
     } catch (error: any) {
