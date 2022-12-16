@@ -28,10 +28,11 @@ route
     passport.authenticate("facebook-token", { session: false }),
     UserController.authFacebook
   );
-route
-  .route("/")
-  .get(UserController.index)
-  .post(validateBody(schemas.userSchema), UserController.newUser);
+
+// route
+//   .route("/")
+//   .get(UserController.index)
+//   .post(validateBody(schemas.userSchema), UserController.newUser);
 
 route
   .route("/signUp")
@@ -42,15 +43,11 @@ route
   .post(
     validateBody(schemas.authSignInSchema),
     passport.authenticate("local", { session: false }),
-    UserController.signIn 
+    UserController.signIn
   );
 
-route
-  .route("/secret")
-  .get(passport.authenticate("jwt", { session: false }), UserController.secret);
-
 route.route("/getAllUser").get(authMiddleware, UserController.getAllUser);
-route.route("/userCurrent").get(UserController.getUserCurrent);
+route.route("/userCurrent").get(authMiddleware, UserController.getUserCurrent);
 route
   .route("/:userID")
   .get(validateParam(schemas.idSchema, "userID"), UserController.getUser)
@@ -64,5 +61,5 @@ route
     validateBody(schemas.userOptionalSchema),
     UserController.updateUser
   );
-
+route.route("/searchUserByName").get(UserController.searchUserByName)
 module.exports = route;

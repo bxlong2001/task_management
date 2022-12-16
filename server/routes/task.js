@@ -14,8 +14,15 @@ route
   .post(
     authMiddleware,
     validateParam(schemas.idSchema, "projectId"),
-    schemas.newTaskSchema,
+    validateBody(schemas.newTaskSchema),
     TaskController.newTask
+  );
+route
+  .route("/editTask/:projectId/:TaskId")
+  .patch(
+    authMiddleware,
+    validateBody(schemas.idSchema, "TaskId"),
+    TaskController.editTask
   );
 
 module.exports = route;

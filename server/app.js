@@ -28,7 +28,7 @@ const app = express();
 //const deckRoute = require("./routes/deck");
 const userRoute = require("./routes/user");
 const projectRoute = require("./routes/project");
-
+const taskRoute = require("./routes/task");
 // Middlewares
 app.use(logger("dev"));
 app.use(bodyParser.json());
@@ -37,6 +37,7 @@ app.use(cors());
 
 app.use("/users", userRoute);
 app.use("/projects", projectRoute);
+app.use("/tasks", taskRoute);
 // Routes
 app.get("/", (req, res, next) => {
   return res.status(200).json({

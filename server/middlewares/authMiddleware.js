@@ -1,7 +1,10 @@
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  const token = req.headers.token.split(" ")[1];
+  console.log(req.headers.authorization.split(" ")[1]);
+
+  const token = req.headers.authorization.split(" ")[1];
+
   if (!token) {
     return res.status(404).json({
       message: "Token is valid",
@@ -14,6 +17,7 @@ const authMiddleware = (req, res, next) => {
       });
     }
     if (user) {
+      console.log(user);
       next();
     } else {
       return res.status(404).json({

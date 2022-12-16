@@ -94,18 +94,28 @@ passport.use(
         if (user) {
           return done(null, user);
         }
-
-        const newUser = new User({
-          authType: "google",
+        const checkEmail = await User.findOne({
           email: profile.emails[0].value,
-          authGoogleID: profile.id,
-          avatar: profile._json.picture,
-          firstName: profile._json.family_name,
-          lastName: profile._json.given_name,
         });
+        if (checkEmail) {
+          await User.updateOne(
+            { email: profile.emails[0].value },
+            { authGoogleID: profile.id }
+          );
+          done(null, profile);
+        } else {
+          const newUser = new User({
+            authType: "google",
+            email: profile.emails[0].value,
+            authGoogleID: profile.id,
+            avatar: profile._json.picture,
+            firstName: profile._json.family_name,
+            lastName: profile._json.given_name,
+          });
 
-        await newUser.save();
-        done(null, newUser);
+          await newUser.save();
+          done(null, newUser);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -125,23 +135,33 @@ passport.use(
         // check whether this current user exists in our database
         const user = await User.findOne({
           authFacebookID: profile.id,
-          authType: "google",
         });
 
         if (user) return done(null, user);
-
-        // If new account
-        const newUser = new User({
-          authType: "facebook",
-          authFacebookID: profile.id,
+        const checkEmail = await User.findOne({
           email: profile.emails[0].value,
-          firstName: profile.name.givenName,
-          lastName: profile.name.familyName,
         });
+        if (checkEmail) {
+          await User.updateOne(
+            { email: profile.emails[0].value },
+            { authFacebookID: profile.id }
+          );
+          done(null, profile);
+        } else {
+          // If new account
+          const newUser = new User({
+            authType: "facebook",
+            authFacebookID: profile.id,
+            email: profile.emails[0].value,
+            firstName: profile.name.givenName,
+            lastName: profile.name.familyName,
+            avatar: profile.photos[0].value,
+          });
 
-        await newUser.save();
+          await newUser.save();
 
-        done(null, newUser);
+          done(null, newUser);
+        }
       } catch (error) {
         console.log("error ", error);
         done(error, false);

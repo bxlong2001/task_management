@@ -27,14 +27,17 @@ const encodedToken = (userID) => {
 
 const createRefreshToken = (data) => {
   const access_token = JWT.sign({ data }, REFRESH_TOKEN, {
-    expiresIn: "365d",
+    expiresIn: "5d",
   });
   return access_token;
 };
 
 const refreshToken = async (req, res, next) => {
   try {
-    const refreshToken = req.headers.token.split(" ")[1];
+    console.log(req.body);
+    console.log(req.headers.refreshtoken);
+    const refreshToken = req.body.refreshToken;
+    //console.log(refreshToken);
     if (refreshToken) {
       JWT.verify(refreshToken, REFRESH_TOKEN, function (err, user) {
         if (err) {
@@ -48,6 +51,7 @@ const refreshToken = async (req, res, next) => {
           return res.json({
             status: "OK",
             access_token: newAccessToken,
+            user: user.data,
           });
         } else {
           return res.json({
@@ -69,8 +73,23 @@ const refreshToken = async (req, res, next) => {
 };
 
 const authFacebook = async (req, res, next) => {
-  const token = encodedToken(req.user._id);
-  return res.status(200).json({ success: true, message: "loi" });
+  try {
+    const token = encodedToken(req.user._id);
+    const refreshToken = createRefreshToken(req.user._id);
+    const User = req.user;
+    return res.status(200).json({
+      success: true,
+      token,
+      User,
+      refreshToken,
+      message: "Xác thực authFacebook thành công",
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(401)
+      .json({ success: false, message: "Xác thực không thành công" });
+  }
 };
 
 const authGoogle = async (req, res, next) => {
@@ -96,7 +115,6 @@ const authGoogle = async (req, res, next) => {
 const getUser = async (req, res, next) => {
   try {
     const { userID } = req.value.params;
-
     const user = await User.findById(userID);
 
     return res.status(200).json({ user });
@@ -109,22 +127,18 @@ const getUser = async (req, res, next) => {
 const getUserCurrent = async (req, res, next) => {
   try {
     const token = req.headers.token.split(" ")[1];
+    console.log("123");
     const decodeToken = JWT.verify(token, process.env.JWT_SECRET);
-
+    if (decodeToken) {
+      console.log(decodeToken);
+    } else {
+      console.log("sss");
+    }
     const userCurrent = await User.findById(decodeToken.sub);
     return res.status(200).json(userCurrent);
   } catch (error) {
     console.log(error);
   }
-};
-
-const getUserDecks = async (req, res, next) => {
-  const { userID } = req.value.params;
-
-  // Get user
-  const user = await User.findById(userID).populate("decks");
-
-  return res.status(200).json({ decks: user.decks });
 };
 
 const index = async (req, res, next) => {
@@ -152,15 +166,16 @@ const replaceUser = async (req, res, next) => {
   return res.status(200).json({ success: true });
 };
 
-const secret = async (req, res, next) => {
-  return res.status(200).json({ resources: true });
-};
-
 const signIn = async (req, res, next) => {
   try {
-    console.log(req.authInfo.message);
     const token = encodedToken(req.user._id);
-    return res.status(200).json({ success: true, token });
+    const refreshToken = createRefreshToken(req.user._id);
+    return res.status(200).json({
+      success: true,
+      token,
+      refreshToken,
+      message: "Đăng nhập thành công",
+    });
   } catch (error) {
     console.log(error);
     return res
@@ -207,15 +222,30 @@ const getAllUser = async (req, res, next) => {
   }
 };
 
+const searchUserByName = async (req, res, next) => {
+  try {
+    const users = await User.find({
+      $or: [
+        { firstName: { $regex: req.body.name } },
+        { lastName: { $regex: req.body.name } },
+      ],
+    });
+    if (users) {
+      return res.status(200).json({ success: true, user: users });
+    }
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
+  searchUserByName,
   getAllUser,
   refreshToken,
   getUser,
-  getUserDecks,
   index,
   newUser,
   replaceUser,
-  secret,
   signIn,
   signUp,
   updateUser,
