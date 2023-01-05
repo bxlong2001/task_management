@@ -1,3 +1,26 @@
-.container-page {
-    margin-top: 66px !important;
+// .container-page {
+//     margin: 66px 0 0 0 !important;
+//     max-width: 100%;
+//     padding: 0;
+// }
+header {
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
+#navbar {
+    height: 100%;
+    padding: 0 20px;
+    .dropdown-menu {
+      left: -90px;
+      top: 70px;
+    }
+    .navbar-nav {
+        align-items: center;
+    }
+
+    .dropdown-item {
+      line-height: 20px;
+      
+    }
 }

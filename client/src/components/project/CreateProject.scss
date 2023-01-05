@@ -1,0 +1,29 @@
+.form-container {
+    max-width: 1000px;
+    margin: auto;
+
+    .search-item {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        
+        img {
+            height: 32px;
+            margin-right: 10px;
+            width: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #eaeaea;
+        }
+
+        .search-info {
+            display: flex;
+            flex-direction: column;
+    
+            .search-email {
+                font-style: italic;
+                font-size: 14px;
+            }
+        }
+    }
+}

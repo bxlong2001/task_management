@@ -18,3 +18,14 @@ export interface Alert {
     type?: string,
     message?: string
 }
+
+//Project
+export interface ProjectForm {
+    Name: string,
+    Notes: string,
+    // Status: 'todo' | 'in_progress' | 'done',
+    Owner: string,
+    Collaborator: (string | undefined)[],
+    StartDate: Date,
+    EndDate: Date,
+  }

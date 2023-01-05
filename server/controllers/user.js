@@ -27,7 +27,7 @@ const encodedToken = (userID) => {
 
 const createRefreshToken = (data) => {
   const access_token = JWT.sign({ data }, REFRESH_TOKEN, {
-    expiresIn: "5d",
+    expiresIn: "365d",
   });
   return access_token;
 };
@@ -126,8 +126,7 @@ const getUser = async (req, res, next) => {
 
 const getUserCurrent = async (req, res, next) => {
   try {
-    const token = req.headers.token.split(" ")[1];
-    console.log("123");
+    const token = req.header('Authorization').split(" ")[1];
     const decodeToken = JWT.verify(token, process.env.JWT_SECRET);
     if (decodeToken) {
       console.log(decodeToken);
@@ -135,7 +134,7 @@ const getUserCurrent = async (req, res, next) => {
       console.log("sss");
     }
     const userCurrent = await User.findById(decodeToken.sub);
-    return res.status(200).json(userCurrent);
+    return res.status(200).json({success: true, userCurrent});
   } catch (error) {
     console.log(error);
   }

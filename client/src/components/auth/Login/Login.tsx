@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { GOOGLE_CLIENT_ID } from "../../../contexts/constaints"
 import { GoogleLogin } from "react-google-login"
 import { gapi } from "gapi-script"
-import { loginUserWithGG, loginUser } from "../../../redux/apiRequest"
+import { loginUserWithGG, loginUser } from "../../../redux/api/apiAuthRequest"
 import { useDispatch } from "react-redux"
 import AlertMessage from "../../layout/Alert/AlertMessage"
 import { Alert, LoginForm } from "../../../interface"
@@ -71,6 +71,16 @@ const Login = () => {
             ...loginForm,
             [e.target.name]: e.target.value
         })
+    }
+
+    //Facebook
+    const componentClicked = (data: any) => {
+        console.warn(data);
+    }
+
+    const responseFacebook = (res: any) => {
+        console.log("login result: ", res);
+        
     }
 
 

@@ -2,10 +2,11 @@ const Joi = require("@hapi/joi");
 
 const validateBody = (schema) => {
   return (req, res, next) => {
+    console.log(req.body);
     const validatorResult = schema.validate(req.body);
     console.log("1");
     if (validatorResult.error) {
-      return res.status(400).json(validatorResult.error);
+      return res.status(400).json({message: validatorResult.error.details[0].message});
     } else {
       if (!req.value) req.value = {};
       if (!req.value["params"]) req.value.params = {};
@@ -47,6 +48,9 @@ const schemas = {
     Status: Joi.string(),
     Owner: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
     Collaborator: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+    StartDate: Joi.date(),
+    EndDate: Joi.date(),
+
   }),
   authSignInSchema: Joi.object().keys({
     email: Joi.string().email().required(),
