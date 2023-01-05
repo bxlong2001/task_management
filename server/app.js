@@ -66,5 +66,5 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server
-const port = app.get("port") || 3000;
+const port = app.get("port") || 8000;
 app.listen(port, () => console.log(`Server is listening on port ${port}`));

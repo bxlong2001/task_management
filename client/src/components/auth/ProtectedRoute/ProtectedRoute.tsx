@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { Spinner } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { Navigate, Outlet } from "react-router-dom"
-import { loadUser } from "../../../redux/apiRequest"
+import { loadUser } from "../../../redux/api/apiAuthRequest"
 
 const ProtectedRoute = () => {
     const { isFetching, isAuthenticated } = useSelector((state: any) => state.user.loadUser)

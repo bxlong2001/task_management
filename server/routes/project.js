@@ -17,6 +17,10 @@ route
   );
 
 route
+    .route("/getProject/:idProject")
+    .get(ProjectController.getProject)
+
+route
   .route("/editProject/:idProject")
   .put(
     validateParam(schemas.idSchema, "idProject"),

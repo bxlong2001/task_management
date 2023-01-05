@@ -61,5 +61,5 @@ route
     validateBody(schemas.userOptionalSchema),
     UserController.updateUser
   );
-route.route("/searchUserByName").get(UserController.searchUserByName)
+route.route("/searchUserByName").post(UserController.searchUserByName)
 module.exports = route;

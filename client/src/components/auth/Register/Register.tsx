@@ -3,7 +3,7 @@ import { Button, Form } from "react-bootstrap"
 import { useDispatch } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 import { Alert, RegisterForm } from "../../../interface"
-import { registerUser } from "../../../redux/apiRequest"
+import { registerUser } from "../../../redux/api/apiAuthRequest"
 import AlertMessage from "../../layout/Alert/AlertMessage"
 
 

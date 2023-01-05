@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { apiUrl, LOCAL_STORAGE_TOKEN_NAME } from '../contexts/constaints'
-import { loginStart, loginFailed, loginSuccess, registerStart, registerSuccess, registerFailed } from './authSlice'
-import { LoginForm, RegisterForm } from '../interface'
-import setAuthToken from '../components/auth/Auth/setAuthToken'
-import { loadUserFailed, loadUserStart, loadUserSuccess } from './userSlice'
+import { apiUrl, LOCAL_STORAGE_TOKEN_NAME } from '../../contexts/constaints'
+import { loginStart, loginFailed, loginSuccess, registerStart, registerSuccess, registerFailed } from '../authSlice'
+import { LoginForm, RegisterForm } from '../../interface'
+import setAuthToken from '../../components/auth/Auth/setAuthToken'
+import { loadUserFailed, loadUserStart, loadUserSuccess } from '../userSlice'
 
 export const loadUser = async (dispatch: any) => {
     dispatch(loadUserStart())
@@ -37,7 +37,6 @@ export const loadUser = async (dispatch: any) => {
 export const loginUserWithGG = async (access_token: string, dispatch: any, navigate: any)=> {
     dispatch(loginStart())
     try {
-        debugger
         const response = await axios.post(apiUrl + 'users/auth/google', {access_token})
         if(response.data.success) {
             localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.token)

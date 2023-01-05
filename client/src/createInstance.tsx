@@ -1,7 +1,7 @@
 import axios from 'axios'
 import jwt_decode from "jwt-decode"
 import setAuthToken from './components/auth/Auth/setAuthToken'
-import { refeshToken } from './redux/apiRequest'
+import { refeshToken } from './redux/api/apiAuthRequest'
 
 export const createAxios = (user: any, dispatch: any, stateSuccess: any) => {
     const newInstance = axios.create()
